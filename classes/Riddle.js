@@ -1,8 +1,8 @@
 import readLine from 'readline-sync';
 
-export default function Riddle(id, taskDescription, correctAnswer){
+export default function Riddle(id, name, taskDescription, correctAnswer){
     this.id = id;
-    this.name = "";
+    this.name = name;
     this.taskDescription = taskDescription;
     this.correctAnswer = correctAnswer;
     this.ask = function(){
