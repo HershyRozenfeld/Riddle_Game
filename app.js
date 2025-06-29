@@ -2,17 +2,6 @@ import { readlineSync, allRiddles, Player, RiddleManager, getSumAndAverage, divM
 
 const pl = new Player();
 
-function askRiddles(RiddlesArray, num1, num2){
-    let time = [];
-    for (let i = 0; i < RiddlesArray.length; i ++){
-        const riddle = new RiddleManager(RiddlesArray[i].id, RiddlesArray[i].name, RiddlesArray[i].taskDescription, RiddlesArray[i].correctAnswer);
-        RiddlesArray[i].num1 = num1;
-        RiddlesArray[i].num2 = num2;
-        time.push(riddle.askManager())
-    }
-    return time;
-}
-
 function askLevel(){
     const level = readlineSync.question('What level you Whant? (Easy(1) Medium(2) Hard(3))');
     let num1, num2;
@@ -38,8 +27,22 @@ function askLevel(){
     return {num1, num2};
 }
 
-let num1, num2 = askLevel()
-const times = askRiddles(allRiddles);
+
+function askRiddles(RiddlesArray, num1, num2){
+    let time = [];
+    for (let i = 0; i < RiddlesArray.length; i ++){
+        const riddleObj = RiddlesArray[i];
+        const taskDescription = riddleObj.getTaskDescription(num1, num2);
+        const correctAnswer = riddleObj.getCorrectAnswer(num1, num2);
+        const riddle = new RiddleManager(riddleObj.id, riddleObj.name, taskDescription, correctAnswer);
+        time.push(riddle.askManager())
+    }
+    return time;
+}
+
+
+const {num1, num2} = askLevel()
+const times = askRiddles(allRiddles, num1, num2);
 const {sum, avg} = getSumAndAverage(times)
 
 console.log(`Average time taken to solve a riddle ${divMinutesAndSeconds(avg)}`);
