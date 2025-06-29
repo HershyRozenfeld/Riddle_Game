@@ -6,9 +6,6 @@ export default function Player(){
     this.name = readlineSync.question('What is your name? ')
     console.log(`Hello ${this.name}`);
     }
-    this.check = function(num){
-        return num == this.correctAnswer ? true : false;
-    }
     this.recordTime = function(start, end){
         this.time = end - start;
     }
