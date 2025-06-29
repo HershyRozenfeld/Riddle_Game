@@ -1,7 +1,11 @@
-export default function Player(id, name){
-    this.id = id;
-    this.name = name;
-    this.time;
+import readlineSync from 'readline-sync';
+
+export default function Player(){
+
+    this.askName = function (){
+    this.name = readlineSync.question('What is your name? ')
+    console.log(`Hello ${this.name}`);
+    }
     this.check = function(num){
         return num == this.correctAnswer ? true : false;
     }
@@ -11,5 +15,6 @@ export default function Player(id, name){
     this.showStats = function(){
         console.log(`Total time: ${this.time}`);
     }
+    this.askName();
 }
 

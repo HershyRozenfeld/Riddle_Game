@@ -1,4 +1,4 @@
-import readLine from 'readline-sync';
+import readlineSync from 'readline-sync';
 
 export default function Riddle(id, name, taskDescription, correctAnswer){
     this.id = id;
@@ -6,7 +6,7 @@ export default function Riddle(id, name, taskDescription, correctAnswer){
     this.taskDescription = taskDescription;
     this.correctAnswer = correctAnswer;
     this.ask = function(){
-        while(!this.check(readLine.question(this.taskDescription))){
+        while(!this.check(readlineSync.question(this.taskDescription))){
             console.log("Your answer is incorrect");
         }
         console.log("Your answer is correct!");
