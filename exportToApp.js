@@ -3,7 +3,6 @@ import allRiddles from './riddles/exportRiddles.js';
 import Player from './classes/Player.js';
 import RiddleManager from './classes/RiddleManager.js';
 import figlet from 'figlet';
-import gradient from 'gradient-string';
 import chalk from 'chalk';
 
 function getSumAndAverage(arr){
@@ -19,13 +18,10 @@ function divMinutesAndSeconds(num){
 }
 
 class UIManager {
-    constructor() {
-        this.gradient = gradient(['#FF6B6B', '#4ECDC4', '#45B7D1', '#96CEB4']);
-        this.progressBar = null;
-    }
 
-    async showWelcome() {
+    showWelcome() {
         console.clear();
+        const colors = [chalk.red, chalk.yellow, chalk.green, chalk.cyan, chalk.blue, chalk.magenta];
 
         const title = figlet.textSync('Math Riddles', {
             font: 'Big',
@@ -33,10 +29,10 @@ class UIManager {
             verticalLayout: 'default'
         });
 
-        console.log(this.gradient(title));
-        console.log(chalk.cyan.bold('\n🎯 Welcome to the Advanced Math Riddles Game! 🎯\n'));
+        const coloredLines = title.split('\n').map((line, i) => colors[i % colors.length].bold(line)).join('\n');
+        console.log(coloredLines);
 
-        this.pause();
+        console.log(chalk.cyan.bold('\n🎯 Welcome to the Advanced Math Riddles Game! 🎯\n'));
     }
 
     async askPlayAgain() {
@@ -46,8 +42,8 @@ class UIManager {
         const yes = ['y', 'yes', '1'];
         return yes.includes(answer.toLowerCase());
     }
-
 }
+
       
 export {
     readlineSync,
