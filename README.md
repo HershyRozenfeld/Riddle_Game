@@ -73,7 +73,10 @@ Your answer is correct!
 What is 4 - 9?: 7
 Your answer is wrong
 What is 4 - 9?:
-
+...
+Average time taken to solve a riddle 00:12
+Total time of solving riddles 00:48
+```
 
 ---
 
