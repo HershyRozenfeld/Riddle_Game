@@ -1,5 +1,7 @@
-import { readlineSync, allRiddles, Player, RiddleManager, getSumAndAverage, divMinutesAndSeconds} from './exportToApp.js';
+import { readlineSync, allRiddles, Player, RiddleManager, getSumAndAverage, divMinutesAndSeconds, UIManager} from './exportToApp.js';
 
+const UI = new UIManager;
+UI.showWelcome();
 const pl = new Player();
 
 function askLevel(){
@@ -40,11 +42,16 @@ function askRiddles(RiddlesArray, num1, num2){
     return time;
 }
 
+function startAndEndGame(){
+    const {num1, num2} = askLevel()
+    const times = askRiddles(allRiddles, num1, num2);
+    const {sum, avg} = getSumAndAverage(times)
+    console.log(`Average time taken to solve a riddle ${divMinutesAndSeconds(avg)}`);
+    console.log(`Total time of solving riddles ${divMinutesAndSeconds(sum)}`);
+    if (UI.askPlayAgain()){
+        startAndEndGame()
+    }
+}
 
-const {num1, num2} = askLevel()
-const times = askRiddles(allRiddles, num1, num2);
-const {sum, avg} = getSumAndAverage(times)
-
-console.log(`Average time taken to solve a riddle ${divMinutesAndSeconds(avg)}`);
-console.log(`Total time of solving riddles ${divMinutesAndSeconds(sum)}`);
+startAndEndGame()
 
