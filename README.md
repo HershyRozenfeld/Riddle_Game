@@ -54,18 +54,26 @@ node app.js
 ## דוגמה לזרימת משחק
 
 ```
-What is your name? <שם>
-Hello <שם>
-What level you Whant? (Easy(1) Medium(2) Hard(3))
-> 2
-What is 34 + 65? 
-> 99
+  __  __       _   _       _____  _     _     _ _
+ |  \/  |     | | | |     |  __ \(_)   | |   | | |
+ | \  / | __ _| |_| |__   | |__) |_  __| | __| | | ___  ___
+ | |\/| |/ _` | __| '_ \  |  _  /| |/ _` |/ _` | |/ _ \/ __|
+ | |  | | (_| | |_| | | | | | \ \| | (_| | (_| | |  __/\__ \
+ |_|  |_|\__,_|\__|_| |_| |_|  \_\_|\__,_|\__,_|_|\___||___/
+
+
+
+� Welcome to the Advanced Math Riddles Game! �
+
+What is your name? hershy
+Hello hershy
+What level you Whant? (Easy(1) Medium(2) Hard(3))1
+What is 4 + 9?: 13
 Your answer is correct!
-What is 34 - 65? 
-...
-Average time taken to solve a riddle 00:12
-Total time of solving riddles 00:48
-```
+What is 4 - 9?: 7
+Your answer is wrong
+What is 4 - 9?:
+
 
 ---
 
