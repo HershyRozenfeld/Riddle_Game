@@ -5,7 +5,7 @@ UI.showWelcome();
 const pl = new Player();
 
 function askLevel(){
-    const level = readlineSync.question('What level you Whant? (Easy(1) Medium(2) Hard(3))');
+    const level = readlineSync.question('What level you Whant? (Easy(1) Medium(2) Hard(3)): ');
     let num1, num2;
     switch(level){
         case '1':
@@ -48,9 +48,7 @@ function startAndEndGame(){
     const {sum, avg} = getSumAndAverage(times)
     console.log(`Average time taken to solve a riddle ${divMinutesAndSeconds(avg)}`);
     console.log(`Total time of solving riddles ${divMinutesAndSeconds(sum)}`);
-    if (UI.askPlayAgain()){
-        startAndEndGame()
-    }
+    (UI.askPlayAgain()) ? startAndEndGame() : null;
 }
 
 startAndEndGame()
