@@ -4,6 +4,10 @@ const UI = new UIManager;
 UI.showWelcome();
 const pl = new Player();
 
+/**
+ * Prompts the user to select a difficulty level and generates two random numbers according to the chosen level.
+ * @returns {Object} An object containing two numbers: num1 and num2.
+ */
 function askLevel(){
     const level = readlineSync.question('What level you Whant? (Easy(1) Medium(2) Hard(3)): ');
     let num1, num2;
@@ -29,7 +33,14 @@ function askLevel(){
     return {num1, num2};
 }
 
-
+/**
+ * Asks the user to solve each riddle in the given array, using the provided numbers as parameters for the riddles.
+ * Measures the time taken for each riddle.
+ * @param {Array} RiddlesArray - Array of riddle objects to be presented to the user.
+ * @param {number} num1 - First number, used in the riddles.
+ * @param {number} num2 - Second number, used in the riddles.
+ * @returns {Array} Array of times taken to answer each riddle.
+ */
 function askRiddles(RiddlesArray, num1, num2){
     let time = [];
     for (let i = 0; i < RiddlesArray.length; i ++){
@@ -42,6 +53,11 @@ function askRiddles(RiddlesArray, num1, num2){
     return time;
 }
 
+/**
+ * Runs the main game loop: asks for the level, presents the riddles, calculates and displays total and average solving times,
+ * and asks the user if they want to play again.
+ * No parameters.
+ */
 function startAndEndGame(){
     const {num1, num2} = askLevel()
     const times = askRiddles(allRiddles, num1, num2);
@@ -52,4 +68,3 @@ function startAndEndGame(){
 }
 
 startAndEndGame()
-
