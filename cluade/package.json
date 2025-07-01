@@ -1,0 +1,28 @@
+{
+  "name": "riddle_game_pro",
+  "version": "2.0.0",
+  "description": "משחק חידות מתמטי מתקדם עם חוויית משתמש מושלמת",
+  "main": "app.js",
+  "type": "module",
+  "scripts": {
+    "start": "node app.js",
+    "dev": "node --watch app.js",
+    "test": "node --test test/**/*.test.js"
+  },
+  "keywords": [
+    "game",
+    "math",
+    "riddles",
+    "hebrew",
+    "interactive"
+  ],
+  "author": "Math Riddle Game Pro",
+  "license": "MIT",
+  "dependencies": {
+    "chalk": "^5.4.1",
+    "readline-sync": "^1.4.10",
+    "figlet": "^1.7.0",
+    "gradient-string": "^2.0.2",
+    "cli-progress": "^3.12.0"
+  }
+}
