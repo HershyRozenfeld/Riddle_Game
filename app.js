@@ -1,7 +1,7 @@
 import { 
     RiddleGame,
     readlineSync, 
-    allRiddles, 
+    getAllRiddles, 
     Player, 
     RiddleManager, 
     getSumAndAverage, 

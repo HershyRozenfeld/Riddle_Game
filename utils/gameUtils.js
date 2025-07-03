@@ -6,26 +6,16 @@ import readlineSync from 'readline-sync';
  */
 export function askLevel() {
     const level = readlineSync.question('What level you Want? (Easy(1) Medium(2) Hard(3)): ');
-    let num1, num2;
     
     switch(level) {
         case '1':
-            num1 = Math.floor(Math.random() * 10);
-            num2 = Math.floor(Math.random() * 10);
-            break;
+            return 1;
         case '2':
-            num1 = Math.floor(Math.random() * 90) + 10;
-            num2 = Math.floor(Math.random() * 90) + 10;
-            break;
+            return 2;
         case '3':
-            num1 = Math.floor(Math.random() * 900) + 100;
-            num2 = Math.floor(Math.random() * 900) + 100;
-            break;
+            return 3;
         default:
             console.log("Invalid level, defaulting to Easy.");
-            num1 = Math.floor(Math.random() * 10);
-            num2 = Math.floor(Math.random() * 10);
-            break;
+            return 1;
     }
-    return { num1, num2 };
 }
