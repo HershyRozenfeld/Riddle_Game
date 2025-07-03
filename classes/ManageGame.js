@@ -30,9 +30,7 @@ export class RiddleGame {
         let times = [];
         for (let i = 0; i < riddlesArray.length; i++) {
             const riddleObj = riddlesArray[i];
-            const taskDescription = riddleObj.getTaskDescription(num1, num2);
-            const correctAnswer = riddleObj.getCorrectAnswer(num1, num2);
-            const riddle = new RiddleManager(riddleObj.id, riddleObj.name, taskDescription, correctAnswer);
+            const riddle = new RiddleManager(riddleObj.id, riddleObj.name, riddleObj.taskDescription, riddleObj.correctAnswer);
             times.push(riddle.askManager());
         }
         return times;
