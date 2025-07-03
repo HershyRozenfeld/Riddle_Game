@@ -48,28 +48,29 @@ export class RiddleGame {
     /**
      * Runs a single game round
      */
-    async playRound() {
-        const level = askLevel();
-        const levelNames = { 1: "Easy", 2: "Medium", 3: "Hard" };
-        
-        try {
-            const riddlesArray = await getRiddlesByLevel(levelNames[level]);
-            
-            if (riddlesArray.length === 0) {
-                console.log("אין חידות זמינות ברמה זו!");
-                return;
-            }
-            
-            const times = this.askRiddles(riddlesArray);
-            const { sum, avg } = getSumAndAverage(times);
-            
-            console.log(`Average time taken to solve a riddle ${divMinutesAndSeconds(avg)}`);
-            console.log(`Total time of solving riddles ${divMinutesAndSeconds(sum)}`);
-            
-        } catch (err) {
-            console.error("שגיאה בטעינת החידות:", err);
+   async playRound() {
+    const level = askLevel();
+    const levelNames = { 1: "Easy", 2: "Medium", 3: "Hard" };
+
+    try {
+        const riddlesArray = await getRiddlesByLevel(levelNames[level]);
+
+        if (riddlesArray.length === 0) {
+            console.log("No riddles available at this level!");
+            return;
         }
+
+        const times = this.askRiddles(riddlesArray);
+        const { sum, avg } = getSumAndAverage(times);
+
+        console.log(`Average time to solve a riddle: ${divMinutesAndSeconds(avg)}`);
+        console.log(`Total time solving riddles: ${divMinutesAndSeconds(sum)}`);
+        
+    } catch (err) {
+        console.error("Error loading riddles:", err);
     }
+}
+
 
     /**
      * CRUD Manager - manages riddle operations
