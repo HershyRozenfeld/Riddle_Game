@@ -4,8 +4,14 @@ export { default as RiddleManager } from "../classes/RiddleManager.js";
 export { default as UIManager } from "../classes/UIManager.js";
 export { RiddleGame } from "../classes/manageGame.js";
 
-// Riddles
-export { default as getAllRiddles } from "../riddles/riddles.txt";
+// CRUD Operations
+export { 
+    getRiddles, 
+    setRiddles, 
+    updateRiddle, 
+    deleteRiddle, 
+    getRiddlesByLevel 
+} from "./crudUtils.js";
 
 // Utils
 export { getSumAndAverage, divMinutesAndSeconds } from "./timeUtils.js";

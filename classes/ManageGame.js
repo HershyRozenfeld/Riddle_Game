@@ -1,6 +1,5 @@
 import { 
     readlineSync, 
-    getAllRiddles, 
     Player, 
     RiddleManager, 
     getSumAndAverage, 
@@ -9,6 +8,13 @@ import {
     askLevel
 } from '../utils/exportToApp.js';
 
+import { 
+    getRiddles, 
+    setRiddles, 
+    updateRiddle, 
+    deleteRiddle, 
+    getRiddlesByLevel 
+} from '../utils/crudUtils.js';
 
 /**
  * Main Game Class
@@ -22,15 +28,18 @@ export class RiddleGame {
     /**
      * Asks riddles and measures time
      * @param {Array} riddlesArray - Array of riddle objects
-     * @param {number} num1 - First number
-     * @param {number} num2 - Second number
      * @returns {Array} Array of times
      */
     askRiddles(riddlesArray) {
         let times = [];
         for (let i = 0; i < riddlesArray.length; i++) {
             const riddleObj = riddlesArray[i];
-            const riddle = new RiddleManager(riddleObj.id, riddleObj.name, riddleObj.taskDescription, riddleObj.correctAnswer);
+            const riddle = new RiddleManager(
+                riddleObj.id, 
+                riddleObj.name, 
+                riddleObj.TaskDescription, 
+                riddleObj.CorrectAnswer
+            );
             times.push(riddle.askManager());
         }
         return times;
@@ -39,57 +48,83 @@ export class RiddleGame {
     /**
      * Runs a single game round
      */
-    playRound() {
-        const lavel = askLevel();
-        const times = getAllRiddles().then(res => this.askRiddles(res));
-        const { sum, avg } = getSumAndAverage(times);
+    async playRound() {
+        const level = askLevel();
+        const levelNames = { 1: "Easy", 2: "Medium", 3: "Hard" };
         
-        console.log(`Average time taken to solve a riddle ${divMinutesAndSeconds(avg)}`);
-        console.log(`Total time of solving riddles ${divMinutesAndSeconds(sum)}`);
+        try {
+            const riddlesArray = await getRiddlesByLevel(levelNames[level]);
+            
+            if (riddlesArray.length === 0) {
+                console.log("אין חידות זמינות ברמה זו!");
+                return;
+            }
+            
+            const times = this.askRiddles(riddlesArray);
+            const { sum, avg } = getSumAndAverage(times);
+            
+            console.log(`Average time taken to solve a riddle ${divMinutesAndSeconds(avg)}`);
+            console.log(`Total time of solving riddles ${divMinutesAndSeconds(sum)}`);
+            
+        } catch (err) {
+            console.error("שגיאה בטעינת החידות:", err);
+        }
     }
 
-    crudManager(){
+    /**
+     * CRUD Manager - manages riddle operations
+     */
+    async crudManager() {
         let flag = true;
         do {
-            console.log("Do you want to view, add, update, or delete riddles? ");
+            console.log("\nDo you want to view, add, update, or delete riddles? ");
             const answer = readlineSync.question('Yes (y) or No (n): ');
             const yes = ['y', 'yes', '1'];
             flag = yes.includes(answer.toLowerCase());
-            if (flag){
-                selectCrudAction();
+            
+            if (flag) {
+                await this.selectCrudAction();
             }
         } while(flag);
     }
     
-    selectCrudAction(){
-        const answerCrud = readlineSync.question("What do you want to do: (View(1), Add(2), Update(3), Delete(4))");
-        switch(answerCrud){
-            case 1:
-                getRiddles();
-                return;
-            case 2:
-                setRiddles();
-                return;
-            case 3:
-                updateRiddle();
-                return;
-            case 4:
-                deleteReddle();
-                return;
+    /**
+     * Selects CRUD action
+     */
+    async selectCrudAction() {
+        const answerCrud = readlineSync.question("What do you want to do: (View(1), Add(2), Update(3), Delete(4)) ");
+        
+        switch(answerCrud) {
+            case '1':
+                await getRiddles();
+                break;
+            case '2':
+                await setRiddles();
+                break;
+            case '3':
+                await updateRiddle();
+                break;
+            case '4':
+                await deleteRiddle();
+                break;
             default:
-                console.log("Your answer does not match any action.")
-                return;
+                console.log("Your answer does not match any action.");
+                break;
         }
     }
+
     /**
      * Main game loop
      */
-    start() {
+    async start() {
         this.ui.showWelcome();
         this.player = new Player();
         
         do {
-            this.playRound();
+            await this.playRound();
         } while (this.ui.askPlayAgain());
+        
+        // לאחר סיום המשחק - שואל אם רוצה לנהל חידות
+        await this.crudManager();
     }
 }
