@@ -5,7 +5,7 @@ export { default as UIManager } from "../classes/UIManager.js";
 export { RiddleGame } from "../classes/manageGame.js";
 
 // Riddles
-export { default as allRiddles } from "../riddles/riddles.txt";
+export { default as getAllRiddles } from "../riddles/riddles.txt";
 
 // Utils
 export { getSumAndAverage, divMinutesAndSeconds } from "./timeUtils.js";
