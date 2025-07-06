@@ -1,57 +1,277 @@
-<p align="right">
+# משחק חידות מתמטי – Math Riddles Game
 
-# משחק חידות מתמטי – Riddle Game
+<p align="center">
+  <img src="https://img.shields.io/badge/Node.js-43853D?style=for-the-badge&logo=node.js&logoColor=white" alt="Node.js"/>
+  <img src="https://img.shields.io/badge/JavaScript-F7DF1E?style=for-the-badge&logo=javascript&logoColor=black" alt="JavaScript"/>
+  <img src="https://img.shields.io/badge/Version-2.0.0-blue?style=for-the-badge" alt="Version"/>
+</p>
 
 ---
 
 ## תיאור כללי
 
-משחק טריוויה מתמטי אינטראקטיבי בשורת הפקודה, בו השחקן פותר סדרת חידות (חשבוניות) ברמות קושי משתנות.  
-המשחק מודד את הזמן שלוקח לפתור כל חידה, מציג ממוצע וזמן כולל, ומנהל סטטיסטיקות על כל שחקן.
+משחק טריוויה מתמטי אינטראקטיבי עם ממשק שורת פקודה מתקדם. המשחק כולל מערכת ניהול חידות מלאה (CRUD), מדידת זמנים, סטטיסטיקות מתקדמות וממשק משתמש צבעוני.
+
+### תכונות עיקריות
+
+- 🎯 **משחק חידות מתמטי** עם שלוש רמות קושי
+- 📊 **מדידת זמנים** ומעקב אחר ביצועים
+- 🔧 **מערכת ניהול חידות מלאה** - צפייה, הוספה, עדכון ומחיקה
+- 🎨 **ממשק משתמש צבעוני** עם אפקטים ויזואליים
+- 💾 **שמירה קבועה** של נתונים לקובץ JSON
+- 🏆 **סטטיסטיקות מתקדמות** - זמן ממוצע, זמן כולל ועוד
+
+---
+
+## תרשים זרימה
+
+```mermaid
+flowchart TD
+    A[התחלה] --> B[הצגת מסך פתיחה]
+    B --> C[קלט שם שחקן]
+    C --> D[בחירת רמת קושי<br/>1-Easy, 2-Medium, 3-Hard]
+    D --> E[טעינת חידות לפי רמה]
+    E --> F{יש חידות זמינות?}
+    F -- לא --> G[הודעת שגיאה]
+    F -- כן --> H[התחלת מדידת זמן]
+    H --> I[הצגת חידה]
+    I --> J[קלט תשובה מהמשתמש]
+    J --> K{בדיקת תשובה}
+    K -- נכונה --> L[הודעת הצלחה]
+    K -- שגויה --> M[הודעת שגיאה]
+    M --> J
+    L --> N[סיום מדידת זמן]
+    N --> O[שמירת זמן במערך]
+    O --> P{יש עוד חידות?}
+    P -- כן --> H
+    P -- לא --> Q[חישוב סטטיסטיקות]
+    Q --> R[הצגת זמן ממוצע וכולל]
+    R --> S{רוצה לשחק שוב?}
+    S -- כן --> D
+    S -- לא --> T{רוצה לנהל חידות?}
+    T -- לא --> U[יציאה]
+    T -- כן --> V[תפריט CRUD]
+    V --> W{בחירת פעולה}
+    W -- צפייה --> X[הצגת כל החידות]
+    W -- הוספה --> Y[הוספת חידה חדשה]
+    W -- עדכון --> Z[עדכון חידה קיימת]
+    W -- מחיקה --> AA[מחיקת חידה]
+    X --> BB{המשך ניהול?}
+    Y --> BB
+    Z --> BB
+    AA --> BB
+    BB -- כן --> V
+    BB -- לא --> U
+    G --> CC[חזרה לבחירת רמה]
+    CC --> D
+
+    style A fill:#e1f5fe
+    style U fill:#ffebee
+    style Q fill:#f3e5f5
+    style R fill:#f3e5f5
+    style V fill:#fff3e0
+```
 
 ---
 
 ## התקנה והרצה
 
+### דרישות מערכת
+
+- Node.js גרסה 14.0 ומעלה
+- NPM או Yarn
+
+### הוראות התקנה
+
 ```bash
+# שכפול הפרויקט
 git clone https://github.com/HershyRozenfeld/Riddle_Game.git
+
+# מעבר לתיקיית הפרויקט
 cd Riddle_Game
+
+# התקנת התלויות
 npm install
-node app.js
+
+# הרצת המשחק
+npm start
 ```
 
-*נדרש Node.js.*
+או בצורה ישירה:
+
+```bash
+node app.js
+```
 
 ---
 
 ## מבנה הפרויקט
 
-- **app.js** – קובץ הכניסה הראשי, מנהל את הפלואו של המשחק.
-- **exportToApp.js** – מבצע ייצוא של מחלקות, חידות וכלי עזר.
-- **classes/** – מחלקות עזר (שחקן, מנהל חידה).
-- **riddles/** – קבצי חידות (כל חידה בקובץ משלה).
-- **package.json** – הגדרות הפרויקט ותלויות.
-- **node_modules/** – ספריות צד שלישי.
+```
+Riddle_Game/
+├── 📁 classes/               # מחלקות המערכת
+│   ├── ManageGame.js        # מנהל המשחק הראשי
+│   ├── Player.js            # מחלקת שחקן
+│   ├── RiddleManager.js     # מנהל חידות בודדות
+│   └── UIManager.js         # מנהל ממשק המשתמש
+├── 📁 riddles/              # מאגר החידות
+│   ├── exportRiddles.js     # יצוא חידות ישנות (legacy)
+│   ├── riddles.txt          # קובץ החידות הראשי (JSON)
+│   └── r1.js - r4.js       # חידות בסיסיות (legacy)
+├── 📁 utils/                # כלי עזר
+│   ├── exportToApp.js       # יצוא מרכזי
+│   ├── crudUtils.js         # פונקציות CRUD
+│   ├── gameUtils.js         # כלי עזר למשחק
+│   ├── timeUtils.js         # חישובי זמן
+│   └── readFile.js          # קריאת קבצים (legacy)
+├── app.js                   # נקודת כניסה ראשית
+├── package.json             # הגדרות הפרויקט
+└── README.md               # מדריך זה
+```
 
 ---
 
-## לוגיקת המשחק
+## מדריך שימוש
 
-1. מתבצע ייבוא של כל החידות והמחלקות.
-2. השחקן מתבקש להכניס שם.
-3. השחקן בוחר רמת קושי (קל/בינוני/קשה) – המשפיעה על המספרים שישולבו בחידות.
-4. מוצגות חידות מתמטיות (חיבור, חיסור, כפל, חילוק) בלולאה.
-5. עבור כל חידה:
-    - מוצג ניסוח החידה.
-    - נמדד הזמן עד שהתשובה נכונה.
-    - מוצג אם התשובה נכונה או לא, עד שמתקבלת תשובה נכונה.
-6. בתום כל החידות:
-    - מוצג זמן ממוצע וזמן כולל.
-    - מוצגות סטטיסטיקות השחקן.
+### זרימת המשחק הבסיסית
+
+1. **הפעלת המשחק** - הרץ `npm start`
+2. **הכנסת שם שחקן** - הזן את שמך
+3. **בחירת רמת קושי**:
+   - `1` - קל (מספרים 1-20)
+   - `2` - בינוני (מספרים 1-50)
+   - `3` - קשה (מספרים 1-100)
+4. **פתרון החידות** - ענה על החידות המוצגות
+5. **צפייה בתוצאות** - ראה את הזמן הממוצע והכולל
+6. **ניהול חידות** (אופציונלי) - הוסף, ערוך או מחק חידות
+
+### מערכת ניהול החידות (CRUD)
+
+#### 1. צפייה בחידות
+
+```
+What do you want to do: (View(1), Add(2), Update(3), Delete(4)) 1
+```
+
+מציג את כל החידות הקיימות בכל הרמות.
+
+#### 2. הוספת חידה חדשה
+
+```
+What do you want to do: (View(1), Add(2), Update(3), Delete(4)) 2
+```
+
+- בחר רמת קושי (Easy/Medium/Hard)
+- הזן שם לחידה
+- הזן את השאלה
+- הזן את התשובה הנכונה
+
+#### 3. עדכון חידה קיימת
+
+```
+What do you want to do: (View(1), Add(2), Update(3), Delete(4)) 3
+```
+
+- הזן ID של החידה
+- עדכן את השדות הרצויים (או השאר ריק לשמירה)
+
+#### 4. מחיקת חידה
+
+```
+What do you want to do: (View(1), Add(2), Update(3), Delete(4)) 4
+```
+
+- הזן ID של החידה
+- אשר את המחיקה
 
 ---
 
-## דוגמה לזרימת משחק
+## אדריכלות המערכת
+
+### מחלקות עיקריות
+
+#### `RiddleGame` - המנהל הראשי
+
+```javascript
+class RiddleGame {
+    async start()           // הפעלת המשחק
+    async playRound()       // סיבוב משחק יחיד
+    async crudManager()     // ניהול החידות
+    askRiddles(array)       // הצגת חידות
+}
+```
+
+#### `Player` - מחלקת השחקן
+
+```javascript
+function Player() {
+  this.askName(); // שאילת שם
+  this.recordTime(); // רישום זמן
+  this.showStats(); // הצגת סטטיסטיקות
+}
+```
+
+#### `RiddleManager` - מנהל חידה בודדת
+
+```javascript
+function RiddleManager(id, name, task, answer) {
+  this.askManager(); // ניהול השאלה
+  this.check(answer); // בדיקת תשובה
+  this.start(); // התחלת מדידת זמן
+  this.endAndCalculation(); // סיום וחישוב
+}
+```
+
+#### `UIManager` - מנהל ממשק המשתמש
+
+```javascript
+class UIManager {
+    showWelcome()          // הצגת מסך פתיחה
+    askPlayAgain()         // שאילת המשך משחק
+}
+```
+
+### פונקציות עזר
+
+#### CRUD Operations (`crudUtils.js`)
+
+- `getRiddles()` - הצגת כל החידות
+- `setRiddles()` - הוספת חידה חדשה
+- `updateRiddle()` - עדכון חידה קיימת
+- `deleteRiddle()` - מחיקת חידה
+- `getRiddlesByLevel(level)` - קבלת חידות לפי רמה
+
+#### Time Utilities (`timeUtils.js`)
+
+- `getSumAndAverage(array)` - חישוב סכום וממוצע
+- `divMinutesAndSeconds(seconds)` - המרה לפורמט MM:SS
+
+#### Game Utilities (`gameUtils.js`)
+
+- `askLevel()` - שאילת רמת קושי
+
+---
+
+## פורמט קובץ החידות
+
+```json
+{
+    "Easy": [
+        {
+            "id": 1,
+            "name": "Easy Math 1",
+            "TaskDescription": "What is 45 + 4?",
+            "CorrectAnswer": 49
+        }
+    ],
+    "Medium": [...],
+    "Hard": [...]
+}
+```
+
+---
+
+## דוגמת הרצה
 
 ```
   __  __       _   _       _____  _     _     _ _
@@ -61,147 +281,188 @@ node app.js
  | |  | | (_| | |_| | | | | | \ \| | (_| | (_| | |  __/\__ \
  |_|  |_|\__,_|\__|_| |_| |_|  \_\_|\__,_|\__,_|_|\___||___/
 
+🎯 Welcome to the Advanced Math Riddles Game! 🎯
 
+What is your name? John
+Hello John
+What level you Want? (Easy(1) Medium(2) Hard(3)): 1
 
-� Welcome to the Advanced Math Riddles Game! �
-
-What is your name? hershy
-Hello hershy
-What level you Whant? (Easy(1) Medium(2) Hard(3))1
-What is 4 + 9?: 13
+What is 45 + 4?: 49
 Your answer is correct!
-What is 4 - 9?: 7
-Your answer is wrong
-What is 4 - 9?:
+
+What is 10 + 7?: 17
+Your answer is correct!
+
+What is 20 - 5?: 15
+Your answer is correct!
+
+What is 6 * 3?: 18
+Your answer is correct!
+
+What is 25 / 5?: 5
+Your answer is correct!
+
+Average time taken to solve a riddle 00:08
+Total time of solving riddles 00:40
+
+🔄 Want to play another round?
+Yes (y) or No (n): n
+
+Do you want to view, add, update, or delete riddles?
+Yes (y) or No (n): y
+
+What do you want to do: (View(1), Add(2), Update(3), Delete(4)) 1
+
+=== כל החידות ===
+
+--- Easy ---
+ID: 1 | שם: Easy Math 1
+שאלה: What is 45 + 4?
+תשובה: 49
 ...
-Average time taken to solve a riddle 00:12
-Total time of solving riddles 00:48
 ```
 
----
-
-## קבצים עיקריים
-
-### app.js
-
-- מייבא את כל הכלים הדרושים.
-- מתחיל כל משחק על ידי יצירת שחקן.
-- שואל את המשתמש לרמת קושי, בוחר זוג מספרים מתאימים.
-- עובר על כל החידות, יוצר עבור כל אחת מופע של RiddleManager, ומנהל הצגתן.
-- מחשב זמן ממוצע וסה"כ, ומדפיס אותם.
-
-### exportToApp.js
-
-- מייצא:
-    - readlineSync – קלט מהמשתמש.
-    - allRiddles – מערך כל החידות.
-    - Player, RiddleManager – מחלקות ניהול.
-    - getSumAndAverage – חישוב סה"כ וממוצע זמנים.
-    - divMinutesAndSeconds – עיצוב תצוגה של זמן.
-
-### classes/Player.js
-
-```js
-export default function Player() {
-    this.askName = function () {
-        this.name = readlineSync.question('What is your name? ');
-        console.log(`Hello ${this.name}`);
-    }
-    this.recordTime = function(start, end) {
-        this.time = end - start;
-    }
-    this.showStats = function() {
-        console.log(`Total time: ${this.time}`);
-    }
-    this.askName();
-}
-```
-- שואל את שם השחקן ומציג ברכה.
-- מאפשר מדידת זמן סטטיסטי והצגתו.
-
-### classes/RiddleManager.js
-
-```js
-export default function RiddleManager(id, name, taskDescription, correctAnswer) {
-    this.id = id;
-    this.name = name;
-    this.taskDescription = taskDescription;
-    this.correctAnswer = correctAnswer;
-    this.askManager = function() {
-        this.start();
-        while(!this.check(this.ask())) {
-            console.log("Your answer is wrong");
-        }
-        console.log("Your answer is correct!");
-        return this.endAndCalculation();
-    }
-    this.ask = function() {
-        return readlineSync.question(`${this.taskDescription}: `);
-    }
-    this.check = function(num) {
-        return num == this.correctAnswer ? true : false;
-    }
-    this.start = function() {
-        this.startTime = Date.now();
-    }
-    this.endAndCalculation = function() {
-        this.endTime = Date.now();
-        const durationMs = this.endTime - this.startTime;
-        return Math.floor(durationMs / 1000);
-    }
-}
-```
-- מנהל חידה בודדת – הצגה, בדיקה, מדידת זמן.
-
-### riddles/exportRiddles.js
-
-```js
-import r1 from './r1.js';
-import r2 from './r2.js';
-import r3 from './r3.js';
-import r4 from './r4.js';
-
-export default [
-    r1,
-    r2,
-    r3,
-    r4
-];
-```
-- מייצא מערך עם כל החידות.
-
-### riddles/r1.js – riddles/r4.js
-
-כל חידה היא אובייקט עם שדות:
-- id – מזהה ייחודי.
-- name – שם החידה.
-- getTaskDescription – פונקציה שמחזירה תיאור החידה בהתאם למספרים.
-- getCorrectAnswer – פונקציה שמחזירה את הפתרון.
-
-לדוג'
-```js
-export default {
-    id: 1,
-    num1:0,
-    num2:0,
-    name: "Easy Math",
-    getTaskDescription: (num1, num2) => `What is ${num1} + ${num2}?`,
-    getCorrectAnswer: (num1, num2) => num1 + num2
-};
-```
 ---
 
 ## תלויות
 
-- readline-sync – קלט סינכרוני מהמשתמש.
-- chalk – עיצוב טקסט למסך (נמצא ב-dependencies אך לא נעשה בו שימוש בקוד שמסרת).
+### Dependencies
+
+```json
+{
+  "chalk": "^5.4.1", // עיצוב טקסט צבעוני
+  "figlet": "^1.8.1", // כיתוב אמנותי
+  "readline-sync": "^1.4.10" // קלט סינכרוני
+}
+```
+
+### Installation
+
+```bash
+npm install chalk figlet readline-sync
+```
 
 ---
 
-## הערות
+## תכונות מתקדמות
 
-- כל הקוד כתוב בסגנון מודולים של ES6.
-- אין בדיקות אוטומטיות (`npm test` מחזיר הודעת שגיאה בלבד).
-- ניתן להרחיב את מערך החידות ע"י הוספת קבצים בתיקיית riddles ועדכון הייצוא.
+### מדידת ביצועים
 
+- מדידת זמן פתרון לכל חידה
+- חישוב זמן ממוצע לחידה
+- הצגת זמן כולל לכל הסיבוב
+
+### ממשק משתמש מתקדם
+
+- כיתוב אמנותי עם Figlet
+- צבעים עם Chalk
+- מסכי ניווט ברורים
+
+### אבטחת נתונים
+
+- הכלת Validation על קלטי משתמש
+- טיפול בשגיאות קבצים
+- בדיקת תקינות נתונים
+
+---
+
+## פיתוח והרחבה
+
+### הוספת חידות חדשות
+
+1. דרך המשחק - השתמש במערכת CRUD
+2. ידני - ערוך את `riddles/riddles.txt`
+
+### הוספת רמות קושי
+
+1. עדכן את `gameUtils.js`
+2. הוסף רמה חדשה ל-`riddles.txt`
+3. עדכן את הלוגיקה ב-`ManageGame.js`
+
+### התאמה אישית
+
+- שנה צבעים ב-`UIManager.js`
+- הוסף אפקטים ויזואליים
+- הרחב את מערכת הסטטיסטיקות
+
+---
+
+## פתרון בעיות נפוצות
+
+### שגיאות קבצים
+
+- ודא שהקובץ `riddles/riddles.txt` קיים
+- בדוק הרשאות קריאה/כתיבה
+
+### בעיות התקנה
+
+```bash
+# נקה cache
+npm cache clean --force
+
+# התקן מחדש
+rm -rf node_modules package-lock.json
+npm install
+```
+
+### שגיאות Runtime
+
+- ודא שגרסת Node.js תואמת (14+)
+- בדוק שכל הקבצים קיימים
+
+---
+
+## Contributing
+
+1. Fork את הפרויקט
+2. צור branch חדש (`git checkout -b feature/amazing-feature`)
+3. Commit השינויים (`git commit -m 'Add amazing feature'`)
+4. Push ל-branch (`git push origin feature/amazing-feature`)
+5. פתח Pull Request
+
+---
+
+## רישיון
+
+הפרויקט מחולק תחת רישיון ISC. ראה `LICENSE` לפרטים נוספים.
+
+---
+
+## יוצרים
+
+- **Hershy Rozenfeld** - _מפתח ראשי_ - [GitHub](https://github.com/HershyRozenfeld)
+
+---
+
+## היסטוריית גרסאות
+
+### v2.0.0 (עדכון נוכחי)
+
+- ✨ הוספת מערכת CRUD מלאה
+- 🚀 שדרוג לארכיטקטורה async/await
+- 🎨 שיפור ממשק המשתמש
+- 📊 הרחבת מערכת הסטטיסטיקות
+- 🔧 תיקוני bugs מרובים
+
+### v1.0.0 (גרסה ראשונית)
+
+- 🎯 משחק חידות בסיסי
+- ⏱️ מדידת זמנים
+- 🎨 ממשק שורת פקודה
+- 📁 מערכת קבצים בסיסית
+
+---
+
+## תמיכה
+
+נתקלת בבעיה? יש לך שאלות?
+
+- פתח [Issue](https://github.com/HershyRozenfeld/Riddle_Game/issues) ב-GitHub
+- שלח מייל למפתח
+- בדוק את הדוקומנטציה לעיל
+
+---
+
+<p align="center">
+  <strong>🎮 תהנה מהמשחק! 🎮</strong>
 </p>

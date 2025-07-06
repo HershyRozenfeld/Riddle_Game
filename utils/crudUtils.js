@@ -2,7 +2,7 @@ import { readFile, writeFile } from "node:fs/promises";
 import path from "node:path";
 import readlineSync from 'readline-sync';
 
-const filePath = path.resolve("riddles/riddles.txt");
+const filePath = path.resolve("data/riddles.txt");
 
 /**
  * Reads all riddles from the file
