@@ -4,7 +4,7 @@ export { default as RiddleManager } from "../classes/RiddleManager.js";
 export { default as UIManager } from "../classes/UIManager.js";
 export { RiddleGame } from "../classes/manageGame.js";
 
-// CRUD Operations
+// CRUD operations
 export { 
     getRiddles, 
     setRiddles, 
@@ -13,7 +13,18 @@ export {
     getRiddlesByLevel 
 } from "./crudUtils.js";
 
-// Utils
+// Player management
+export { 
+    findPlayer, 
+    createPlayer, 
+    updatePlayer, 
+    filterUnsolvedRiddles, 
+    addSolvedRiddle, 
+    identifyOrCreatePlayer, 
+    showPlayerStats 
+} from "./playersManager.js";
+
+// Utility functions
 export { getSumAndAverage, divMinutesAndSeconds } from "./timeUtils.js";
 export { askLevel } from "./gameUtils.js";
 
