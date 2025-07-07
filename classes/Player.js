@@ -1,17 +1,36 @@
-import readlineSync from 'readline-sync';
+import { identifyOrCreatePlayer, showPlayerStats } from '../utils/playersManager.js';
 
-export default function Player(){
-
-    this.askName = function (){
-    this.name = readlineSync.question('What is your name? ')
-    console.log(`Hello ${this.name}`);
+export default function Player() {
+    this.playerData = null;
+    
+    /**
+     * Identifies or creates a new player
+     */
+    this.identify = async function() {
+        this.playerData = await identifyOrCreatePlayer();
+        return this.playerData;
     }
-    this.recordTime = function(start, end){
+    
+    /**
+     * Returns the player data
+     */
+    this.getPlayerData = function() {
+        return this.playerData;
+    }
+    
+    /**
+     * Displays the player's statistics
+     */
+    this.showStats = function() {
+        if (this.playerData) {
+            showPlayerStats(this.playerData);
+        }
+    }
+    
+    /**
+     * Saves the time it took to solve a riddle
+     */
+    this.recordTime = function(start, end) {
         this.time = end - start;
     }
-    this.showStats = function(){
-        console.log(`Total time: ${this.time}`);
-    }
-    this.askName();
 }
-
