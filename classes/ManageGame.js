@@ -19,10 +19,8 @@ import {
 import { 
     filterUnsolvedRiddles, 
     addSolvedRiddle, 
-    updatePlayer 
-} from '../utils/playersManager.js';
-import { 
-    showPlayerStats 
+    updatePlayer,
+    showPlayerStats
 } from '../utils/playersManager.js';
 
 /**
