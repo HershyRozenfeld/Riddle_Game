@@ -21,6 +21,9 @@ import {
     addSolvedRiddle, 
     updatePlayer 
 } from '../utils/playersManager.js';
+import { 
+    showPlayerStats 
+} from '../utils/playersManager.js';
 
 /**
  * Main game class
