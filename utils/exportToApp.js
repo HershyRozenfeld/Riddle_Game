@@ -1,8 +1,8 @@
 // Classes
-export { default as Player } from "../classes/Player.js";
-export { default as RiddleManager } from "../classes/RiddleManager.js";
-export { default as UIManager } from "../classes/UIManager.js";
-export { RiddleGame } from "../classes/manageGame.js";
+export { default as Player } from "../models/Player.js";
+export { default as RiddleManager } from "../models/RiddleManager.js";
+export { default as UIManager } from "../models/UIManager.js";
+export { RiddleGame } from "../models/manageGame.js";
 
 // CRUD operations
 export { 
