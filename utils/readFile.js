@@ -1,5 +1,5 @@
 import { readFile } from "node:fs/promises";
-const path = path.resolve("../", "riddles/riddles.txt");
+const path = path.resolve("../", "data/riddles.txt");
 
 export default async function fileReader(level = "Easy") {
   try {
