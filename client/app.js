@@ -134,81 +134,99 @@ async function registerPlayer() {
   }
 }
 
+async function fetchRiddles() {
+  const res = await fetch(`${SERVER_URL}/api/riddles`);
+  if (!res.ok) {
+    console.log("❌ Failed to fetch riddles");
+    return null;
+  }
+  return res.json();
+}
+
+function getUnsolvedRiddles(riddles, currentPlayer) {
+  return riddles.filter(riddle => {
+    const riddleIdString = riddle._id.toString();
+    return !currentPlayer.solved_riddles.includes(riddleIdString);
+  });
+}
+
+function selectRandomRiddle(riddles) {
+  return riddles[Math.floor(Math.random() * riddles.length)];
+}
+
+function displayRiddle(riddle) {
+  console.log(`\n📝 Riddle: ${riddle.name}`);
+  console.log(`🎯 Level: ${riddle.level}`);
+  console.log(`❓ Question: ${riddle.question}`);
+}
+
+function askUserAnswer() {
+  const startTime = Date.now();
+  const userAnswer = readlineSync.question("\nYour answer: ");
+  const endTime = Date.now();
+  const timeToSolve = Math.round((endTime - startTime) / 1000);
+  return { userAnswer, timeToSolve };
+}
+
+function isAnswerCorrect(userAnswer, correctAnswer) {
+  return userAnswer.toString().toLowerCase().trim() === 
+         correctAnswer.toString().toLowerCase().trim();
+}
+
+async function submitScore(randomRiddle, timeToSolve, currentPlayer) {
+  const scoreData = {
+    email: currentPlayer.email,
+    riddle_id: randomRiddle._id.toString(),
+    time_to_solve: timeToSolve,
+    riddle_level: randomRiddle.level
+  };
+
+  const scoreRes = await fetch(`${SERVER_URL}/api/players/submit-score`, {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify(scoreData),
+  });
+
+  if (scoreRes.ok) {
+    const result = await scoreRes.json();
+    console.log(`⏱️  Time: ${timeToSolve} seconds`);
+    console.log(`📊 Updated stats:`, result.updatedStats);
+
+    currentPlayer.solved_riddles.push(randomRiddle._id.toString());
+    currentPlayer.stats = result.updatedStats;
+  } else {
+    console.log("⚠️  Answer correct but failed to save score");
+  }
+}
+
 async function playGame() {
   try {
-    // Get all riddles first
-    const res = await fetch(`${SERVER_URL}/api/riddles`);
-    if (!res.ok) {
-      console.log("❌ Failed to fetch riddles");
-      return;
-    }
-    
-    const riddles = await res.json();
-    
-    const unsolvedRiddles = riddles.filter(riddle => {
-      const riddleIdString = riddle._id.toString();
-      return !currentPlayer.solved_riddles.includes(riddleIdString);
-    });
-    
+    const riddles = await fetchRiddles();
+    if (!riddles) return;
+
+    const unsolvedRiddles = getUnsolvedRiddles(riddles, currentPlayer);
     if (unsolvedRiddles.length === 0) {
       console.log("🎉 Congratulations! You've solved all available riddles!");
       return;
     }
-    
-    // Select random unsolved riddle
-    const randomRiddle = unsolvedRiddles[Math.floor(Math.random() * unsolvedRiddles.length)];
-    
-    console.log(`\n📝 Riddle: ${randomRiddle.name}`);
-    console.log(`🎯 Level: ${randomRiddle.level}`);
-    console.log(`❓ Question: ${randomRiddle.question}`);
-    
-    const startTime = Date.now();
-    const userAnswer = readlineSync.question("\nYour answer: ");
-    const endTime = Date.now();
-    
-    const timeToSolve = Math.round((endTime - startTime) / 1000); // seconds
-    
-    // Check answer - convert both to strings for comparison
-    const userAnswerStr = userAnswer.toString().toLowerCase().trim();
-    const correctAnswerStr = randomRiddle.answer.toString().toLowerCase().trim();
-    
-    if (userAnswerStr === correctAnswerStr) {
+
+    const randomRiddle = selectRandomRiddle(unsolvedRiddles);
+    displayRiddle(randomRiddle);
+
+    const { userAnswer, timeToSolve } = askUserAnswer();
+
+    if (isAnswerCorrect(userAnswer, randomRiddle.answer)) {
       console.log("🎉 Correct! Well done!");
-      
-      // Submit score - send riddle ID as string
-      const scoreData = {
-        email: currentPlayer.email,
-        riddle_id: randomRiddle._id.toString(), // Convert to string
-        time_to_solve: timeToSolve,
-        riddle_level: randomRiddle.level
-      };
-      
-      const scoreRes = await fetch(`${SERVER_URL}/api/players/submit-score`, {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(scoreData),
-      });
-      
-      if (scoreRes.ok) {
-        const result = await scoreRes.json();
-        console.log(`⏱️  Time: ${timeToSolve} seconds`);
-        console.log(`📊 Updated stats:`, result.updatedStats);
-        
-        // Update current player data
-        currentPlayer.solved_riddles.push(randomRiddle._id.toString());
-        currentPlayer.stats = result.updatedStats;
-      } else {
-        console.log("⚠️  Answer correct but failed to save score");
-      }
-      
+      await submitScore(randomRiddle, timeToSolve, currentPlayer);
     } else {
       console.log(`❌ Wrong! The correct answer was: ${randomRiddle.answer}`);
     }
-    
+
   } catch (error) {
     console.log("❌ Error playing game:", error.message);
   }
 }
+
 
 async function createRiddle() {
   const level = readlineSync.question("Select difficulty (Easy/Medium/Hard): ");
