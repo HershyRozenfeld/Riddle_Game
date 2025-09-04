@@ -6,7 +6,6 @@ import { supabase } from './db/supabaseClient.js';
 import riddleRoutes from './routes/riddles.js';
 import playerRoutes from './routes/players.js';
 import debugRouter from './routes/debug.js';
-import cors from "cors";
 
 dotenv.config();
 
